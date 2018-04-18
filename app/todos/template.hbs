@@ -1,0 +1,27 @@
+<h2>TODOs:</h2>
+{{#each model as |todo|}}
+  <div class="todo">
+    <div class="todo--title">
+      {{todo.title}}
+    </div>
+    <div class="todo--content">
+      <ul>
+        {{#each todo.items as |item|}}
+          <li>{{item.name}} - {{item.done}}</li>
+        {{/each}}
+        <li>
+          {{#if isAdding}}
+            {{input type="text"
+                    value=itemName
+                    placeholder="I can do it!"
+            }}
+            <button type="button" {{action "saveItem" todo itemName}}>Save</button>
+          {{else}}
+            <span {{action "toggleAddItem"}}>Add New Item +</span>
+          {{/if}}
+
+        </li>
+      </ul>
+    </div>
+  </div>
+{{/each}}

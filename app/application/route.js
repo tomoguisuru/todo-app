@@ -2,28 +2,28 @@ import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { get } from '@ember/object';
 
-import { later } from '@ember/runloop';
-
 export default Route.extend({
   socket: service('socket-io'),
 
   activate() {
     const channel = parseInt((Math.random() * 2 + 1).toFixed(0));
+    const room_id = `company_${channel}`;
 
-    console.log('Connected to ', channel);
+    console.log('Connected to ', room_id);
 
-    const socket = get(this, 'socket').socketFor('http://localhost:5001/manage');
+    const socket = get(this, 'socket').socketFor('http://localhost:5001');
 
-    socket.emit('join', `company_${channel}`);
+    // socket.emit('join', room_id);
+    socket.emit('knock', room_id);
 
-    socket.on('rt-change', function(message) {
+    socket.on('model-change', function(message) {
       console.log(message);
     });
   },
 
   deactivate() {
-    const socket = get(this, 'socket').socketFor('http://localhost:5001/manage');
+    const socket = get(this, 'socket').socketFor('http://localhost:5001');
 
-    socket.off('rt-change');
+    socket.off('model-change');
   },
 });
